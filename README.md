@@ -67,6 +67,10 @@ Run the automated tests with:
 python -m unittest discover -s tests -v
 ```
 
+## Next Tasks
+
+1. To test the performance of movement of the file from pen drive to PC with this app vs default file movement speed.
+
 ## License
 
 AutoSort is distributed under the MIT License.

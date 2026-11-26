@@ -5,6 +5,7 @@ import logging
 import os
 import sys
 import subprocess
+from pathlib import Path
 from typing import Optional
 
 import pystray
@@ -26,21 +27,35 @@ class AutoSortTray:
         self.config = config
         self.icon: Optional[pystray.Icon] = None
         
+    def _get_icon_path(self) -> Path:
+        """Resolves the bundled or source-tree application icon path."""
+        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+            return Path(sys._MEIPASS) / 'assets' / 'icon.ico'
+        return Path(__file__).resolve().parent.parent / 'assets' / 'icon.ico'
+
     def _create_image(self) -> Image.Image:
-        """Creates a simple 64x64 folder icon."""
+        """Loads the application icon, falling back to a drawn folder icon."""
+        icon_path = self._get_icon_path()
+        if icon_path.exists():
+            try:
+                with Image.open(icon_path) as img:
+                    return img.convert('RGBA')
+            except Exception as e:
+                logger.warning(f"Failed to load icon from {icon_path}: {e}. Using fallback icon.")
+
         width = 64
         height = 64
-        
+
         image = Image.new('RGBA', (width, height), (0, 0, 0, 0))
         draw = ImageDraw.Draw(image)
-        
+
         folder_color = (76, 175, 80, 255)  # Green
-        
+
         # Draw tab
         draw.rectangle([8, 12, 28, 20], fill=folder_color)
         # Draw body
         draw.rectangle([8, 20, 56, 52], fill=folder_color)
-        
+
         return image
 
     def _toggle_pause(self, icon: pystray.Icon, item: pystray.MenuItem):
