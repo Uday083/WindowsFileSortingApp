@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# Packaging
+build/
+dist/
+# Note: AutoSort.spec (PyInstaller config) is tracked intentionally
+
+# Test and coverage outputs
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# Local developer configuration
+.vscode/
+.idea/
+*.local
+
+# Generated application data
+*.log
